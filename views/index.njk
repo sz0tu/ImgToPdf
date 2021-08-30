@@ -3,7 +3,19 @@
 
 
 {% block content %}
-  <h1>{{title}}</h1>
-  <p>Welcome to {{title}}</p>
+    <h1 class="title">{{ title }}</h1>
+    <form action="" class="form">
+        <div class="input-group">
+            <input type="file" multiple id="input-file" class="input-file"/>
+            <div class="file-selected"></div>
+            <label for="input-file" aria-controls="add-file" class="button">Add</label>
+        </div>
+        <button class="button">Convert</button>
+    </form>
+<div class="preview"></div>
 {% endblock %}
 
+
+{% block script %}
+    <script src="js/script.js"></script>
+{% endblock %}
