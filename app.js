@@ -5,17 +5,11 @@ const logger = require('morgan');const nunjucks = require('nunjucks');
 const bodyParser = require("body-parser");
 const sassMiddleware = require('node-sass-middleware');
 const path = require('path');
-const fileUpload = require('express-fileupload')
 const indexRouter = require('./routes/index');
 
 const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
-
-app.use(fileUpload({
-  useTempFiles : true,
-  tempFileDir : 'public/uploads'
-}));
 
 app.set('view engine', 'njk');
 nunjucks.configure('views', {
