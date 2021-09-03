@@ -95,6 +95,7 @@ server.on('listening', () => {
     ? `pipe ${addr}`
     : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
-});
+  console.log(`Server start: http://localhost:${addr.port}`)
+})
 
 
