@@ -44,7 +44,12 @@ h1, h2, h3, h4, h5 {
 .input-file {
   display: none; }
 
-.file-selected {
+.input-text {
+  color: red;
+  border: none;
+  padding: 10px 5px; }
+
+.file-selected, .input-text {
   display: flex;
   align-items: center;
   background-color: #E1E5F2;

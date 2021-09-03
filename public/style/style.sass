@@ -48,8 +48,15 @@ h1,h2,h3,h4,h5
   border-radius: 5px
   padding: 10px 15px
 
-.input-file
-  display: none
+.input
+  &-file
+    display: none
+
+  &-text
+    color: red
+    border: none
+    padding: 10px 5px
+    @extend .file-selected
 
 .file-selected
   display: flex
