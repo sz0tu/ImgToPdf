@@ -11,7 +11,7 @@ DOM.inputFile.addEventListener('change', () => {
         return files[key];
     })
     DOM.fileSelected.innerHTML = `${files.length} selected`
-
+    DOM.previewFile.innerHTML = ""
     for(let index in files) {
         const file = files[index]
         const template = `${file.name}`
