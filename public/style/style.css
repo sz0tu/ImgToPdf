@@ -73,4 +73,8 @@ h1, h2, h3, h4, h5 {
   overflow: auto;
   color: #022B3A; }
 
+.small {
+  font-size: 8px;
+  color: #022B3A; }
+
 /*# sourceMappingURL=style.css.map */
