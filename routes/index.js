@@ -2,6 +2,7 @@ const { Router } = require('express');
 const PDFDocument =  require('pdfkit');
 const path = require("path");
 const upload = require("../middleware/uploadFile")
+const fs = require("fs");
 const router = Router();
 
 /* GET index page. */
@@ -19,18 +20,17 @@ router.post('/generatePDF',  upload.array("image"), async (req, res) => {
   let buffers = [];
   myDoc.on('data', buffers.push.bind(buffers));
   myDoc.on('end', () => {
-
     let pdfData = Buffer.concat(buffers);
     res.writeHead(200, {
       'Content-Length': Buffer.byteLength(pdfData),
       'Content-Type': 'application/pdf',
       'Content-disposition': `attachment;filename=${fileName}.pdf`,})
-        .end(pdfData);
-
+        .end(pdfData)
   });
 
+
   const marginTop = 20
-let positionY = marginTop
+  let positionY = marginTop
   for(let file of req.files) {
     const pathImage = path.join(__dirname+ '/../public', 'uploads/')+file.filename
     if(positionY > 800) {
@@ -45,7 +45,13 @@ let positionY = marginTop
           valign: "center"
       })
           .text(file.originalname, 0, positionY);
-      positionY += 420
+      positionY += 420;
+
+      try {
+        fs.unlinkSync(pathImage)
+      } catch {
+        console.log('err')
+      }
     }
 
   }
