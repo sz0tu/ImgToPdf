@@ -1,10 +1,7 @@
 const { Router } = require('express');
-const uploadFile = require("../middleware/uploadFile");
-const fs = require("fs");
 const PDFDocument =  require('pdfkit');
-const multer = require("multer");
 const path = require("path");
-
+const upload = require("../middleware/uploadFile")
 const router = Router();
 
 /* GET index page. */
@@ -14,36 +11,11 @@ router.get('/', (req, res) => {
   });
 });
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(
-        null,
-        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
+const ALLOWED_EXTENSION = ['.png', '.jpg', '.jpeg']
 
-const imageFilter = function (req, file, cb) {
-  if (
-      file.mimetype == "image/png" ||
-      file.mimetype == "image/jpg" ||
-      file.mimetype == "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-    return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
-  }
-};
-
-var upload = multer({ storage: storage, fileFilter: imageFilter });
-
-router.post('/generatePDF',  async (req, res, next) => {
-  const myDoc = new PDFDocument({bufferPages: true});
-
+router.post('/generatePDF',  upload.array("image"), async (req, res) => {
+  const myDoc = new PDFDocument({bufferPages: true, margin: 60});
+  const {fileName} = req.body
   let buffers = [];
   myDoc.on('data', buffers.push.bind(buffers));
   myDoc.on('end', () => {
@@ -52,17 +24,32 @@ router.post('/generatePDF',  async (req, res, next) => {
     res.writeHead(200, {
       'Content-Length': Buffer.byteLength(pdfData),
       'Content-Type': 'application/pdf',
-      'Content-disposition': 'attachment;filename=test.pdf',})
+      'Content-disposition': `attachment;filename=${fileName}.pdf`,})
         .end(pdfData);
 
   });
-  const pathImage = path.join(__dirname+ '/../public', 'uploads/')+req.files.image.name
-  await req.files.image.mv(pathImage, function(err) {})
-    myDoc.image(pathImage, {
-    fit: [200, 200],
-    align: 'center',
-    valign: 'center'
-  });
+
+  const marginTop = 20
+let positionY = marginTop
+  for(let file of req.files) {
+    const pathImage = path.join(__dirname+ '/../public', 'uploads/')+file.filename
+    if(positionY > 800) {
+      positionY = marginTop
+      myDoc.addPage()
+    }
+    if(ALLOWED_EXTENSION.includes(path.extname(file.originalname))) {
+      myDoc.image(pathImage, 67.5, positionY , {
+          width: 460,
+          height: 380,
+          align: "center",
+          valign: "center"
+      })
+          .text(file.originalname, 0, positionY);
+      positionY += 420
+    }
+
+  }
+
   myDoc.end();
 
 
