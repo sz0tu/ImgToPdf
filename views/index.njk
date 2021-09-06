@@ -6,11 +6,10 @@
     <h1 class="title">{{ title }}</h1>
     <form action="/generatePDF" class="form" method="post" enctype="multipart/form-data">
         <div class="input-group">
-
             <input type="text" class="input-text" placeholder="Name file (without extension)" required name="fileName"/>
         </div>
         <div class="input-group">
-            <input type="file" name="image" id="input-file" class="input-file"/>
+            <input type="file" name="image" multiple id="input-file" class="input-file"/>
             <div class="file-selected">Add file</div>
             <label for="input-file" aria-controls="add-file" class="button">Add</label>
         </div>
